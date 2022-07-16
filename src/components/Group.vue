@@ -58,6 +58,8 @@
                     type="number"
                     label="Bearbeiten"
                     single-line
+                    min=0
+                    :max="cups"
                 />
               </template>
             </v-edit-dialog>
@@ -92,6 +94,8 @@
                     type="number"
                     label="Bearbeiten"
                     single-line
+                    min=0
+                    :max="cups"
                 />
               </template>
             </v-edit-dialog>
@@ -112,7 +116,7 @@
     </v-expansion-panel>
     <v-expansion-panel>
       <v-expansion-panel-header color="primary white--text" style="font-size: 1.3rem"
-      >Tabelle
+      >Tabelle von {{ group.name }}
         <template v-slot:actions>
           <v-icon color="white">mdi-chevron-down</v-icon>
         </template>
@@ -125,9 +129,11 @@
             :items="group.teams"
             mobile-breakpoint="400"
             hide-default-footer
+            :items-per-page="-1"
         >
           <template v-slot:[`item.id`]="{ item }">
-            <div class="numbering">{{ group.teams.indexOf(item) + 1 }}</div>
+            <div class="numbering" style="background-color: green;" v-if="(group.teams.indexOf(item)< group.winnerPerGroup)"> {{ group.teams.indexOf(item) + 1 }} </div>
+            <div class="numbering" style="background-color: red;" v-if="(group.teams.indexOf(item)>= group.winnerPerGroup)"> {{ group.teams.indexOf(item) + 1 }} </div>
           </template>
 
           <template v-slot:[`item.name`]="{ item }">
@@ -157,6 +163,9 @@
           </template>
           <template v-slot:[`item.games`]="{ item }">
             <span class="standings-score">{{ item.games }}</span>
+          </template>
+          <template v-slot:[`item.wins`]="{ item }">
+            <span class="standings-score">{{ item.wins }}</span>
           </template>
           <template v-slot:[`item.points`]="{ item }">
             <span class="standings-score-highlight">{{ item.points }}</span>
@@ -200,6 +209,8 @@ export default {
           6,
           7,
           10,
+          20,
+          30,
           -1
         ],
       },
@@ -256,19 +267,25 @@ export default {
           sortable: false,
         },
         {
-          text: "Sp.",
+          text: "Spiele",
           value: "games",
           align: "center",
           sortable: false,
         },
         {
-          text: "Pkt.",
+          text: "Wins",
+          value: "wins",
+          align: "center",
+          sortable: false,
+        },
+        {
+          text: "Punkte",
           value: "points",
           align: "center",
           sortable: false,
         },
         {
-          text: "Biere",
+          text: "Treffer",
           value: "beerScore",
           align: "center",
           sortable: false,
@@ -277,6 +294,9 @@ export default {
     };
   },
   computed: {
+    cups() {
+      return this.$store.state.settings.cups;
+    },
     games() {
       return this.group?.games ?? [];
     },
@@ -287,10 +307,11 @@ export default {
       ];
     },
     itemsPerPage() {
+      return this.group.teams.length / 2;
       if (this.$store.state.layout.isPaginationEnabled) {
         return this.$store.state.layout.gamesPerPage;
       } else {
-        return this.games.length;
+        return this.games.length / (this.games.length/this.teams.length);
       }
     },
     showPaginationFooter(){
@@ -298,6 +319,15 @@ export default {
     }
   },
   methods: {
+    validate() {
+      let cups = this.$store.state.settings.cups;
+      console.log(this.beerInput + " / " + cups);
+      if(Number(this.beerInput) > Number(cups) || Number(this.beerInput) < 0)
+      {
+        return false;
+      }
+      return true;
+    },
     getGameResultStyling(teamPos, score) {
       if (
           (score.beers1 === undefined && teamPos === 1) ||
@@ -309,15 +339,15 @@ export default {
       let styling = "default";
       if (teamPos === 1) {
         if (score.beers1 < score.beers2) {
-          styling = "winner";
-        } else if (score.beers1 > score.beers2) {
           styling = "loser";
+          } else if (score.beers1 > score.beers2) {
+            styling = "winner";
         }
       } else if (teamPos === 2) {
         if (score.beers2 < score.beers1) {
-          styling = "winner";
-        } else if (score.beers2 > score.beers1) {
           styling = "loser";
+          } else if (score.beers2 > score.beers1) {
+            styling = "winner";
         }
       }
 
@@ -344,6 +374,9 @@ export default {
       return count
     },
     saveBeer1Input(game) {
+      if(!this.validate())
+        return;
+      console.log("durch");
       game.score.beers1 = this.beerInput ? +this.beerInput : undefined;
       this.beerInput = "";
 
@@ -358,6 +391,9 @@ export default {
     },
 
     saveBeer2Input(game) {
+      if(!this.validate())
+        return;
+      console.log("durch");
       game.score.beers2 = this.beerInput ? +this.beerInput : undefined;
       this.beerInput = "";
 

@@ -10,7 +10,7 @@
 export default {
   name: "App",
   created() {
-    document.title = "Bierpong-Turnier";
+    document.title = "Bierpong-Turnier-Manager";
   },
 };
 </script>

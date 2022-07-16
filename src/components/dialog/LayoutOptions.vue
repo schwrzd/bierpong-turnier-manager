@@ -13,7 +13,7 @@
       <v-col class="pb-0" cols="12">
         <v-select
             outlined
-            :items="[1, 2, 3, 4]"
+            :items="[1, 2, 3, 4, 6]"
             label="Gruppen pro Reihe"
             v-model="$store.state.layout.groupsPerRow"
         ></v-select>
@@ -27,7 +27,7 @@
       <v-col class="pt-0 " cols="12" sm="6">
         <v-select
             outlined
-            :items="[2, 3, 4, 5, 6, 7, 10]"
+            :items="[2, 3, 4, 5, 6, 7, 10, 20, 30]"
             label="Spiele pro Tabellenseite"
             :disabled="!$store.state.layout.isPaginationEnabled"
             v-model="$store.state.layout.gamesPerPage"

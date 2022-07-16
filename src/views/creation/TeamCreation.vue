@@ -33,6 +33,43 @@
       <v-row align="center">
         <v-col class="pt-0" cols="4">
           <p>
+            <v-icon class="mr-2" color="primary">mdi-cards</v-icon>
+            Gruppenrundenspiele:
+          </p>
+        </v-col>
+        <v-col cols="8">
+          <v-text-field
+            v-model="specialTournamentConfig.gamesPerGroupCount"
+            type="number"
+            min="1"
+            max="5"
+            label="Anzahl Spiele pro Team pro Gruppe"
+            required
+            outlined
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row align="center">
+        <v-col class="pt-0" cols="4">
+          <p>
+            <v-icon class="mr-2" color="primary">mdi-trophy-outline</v-icon>
+            Gewinner pro Gruppe:
+          </p>
+        </v-col>
+        <v-col cols="8">
+          <v-text-field
+            v-model="specialTournamentConfig.winnerPerGroupCount"
+            type="number"
+            min="1"
+            label="Anzahl Gewinner pro Gruppe"
+            required
+            outlined
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row align="center">
+        <v-col class="pt-0" cols="4">
+          <p>
             <v-icon class="mr-2" color="primary"
               >mdi-account-supervisor-circle</v-icon
             >
@@ -43,8 +80,7 @@
           <v-textarea
             v-model.trim="specialTournamentConfig.teams"
             :label="teamLabel"
-            placeholder="Mit + Komma, getrennt + oder
-neue + Zeile"
+            placeholder="Mit + Komma, getrennt + oderneue + Zeile"
             :rules="teamCountRules"
             required
             outlined
@@ -99,6 +135,8 @@ export default {
       specialTournamentConfig: {
         isValid: false,
         groupCount: 1,
+        gamesPerGroupCount: 1,
+        winnerPerGroupCount: 3,
         teams: "",
       },
     };
@@ -148,7 +186,10 @@ export default {
           this.tournamentConfig.startTime +
           ":00",
         groupCount: this.specialTournamentConfig.groupCount,
+        gamesPerGroupCount: this.specialTournamentConfig.gamesPerGroupCount,
+        winnerPerGroupCount: this.specialTournamentConfig.winnerPerGroupCount,
         teams: this.teamArray,
+        rankingConfig: this.$store.state.settings,
       };
 
       const tournament = await createTournament(config);

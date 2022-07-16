@@ -108,9 +108,10 @@ export function convertPlayerConfigToGroups(config) {
 
 export function convertTeamConfigToGroups(config) {
     const teams = createTeamsFromNames(config.teams)
-    const groups = createGroups(teams, config.groupCount)
+    const rankingConfig = config.rankingConfig
+    const groups = createGroups(teams, config.groupCount, config.winnerPerGroupCount, rankingConfig)
     groups.forEach(grp => {
-        grp.games = createGames(grp)
+        grp.games = createGames(grp, config.gamesPerGroupCount)
     })
     return groups
 }

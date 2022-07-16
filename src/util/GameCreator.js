@@ -4,8 +4,10 @@ import Score from "../model/Score"
 import { v4 as uuid } from "uuid";
 import {colors} from "../model/Team";
 
-export function createGames(group) {
+export function createGames(group, groupGames) {
     const teamCount = group ? group.teams.length : 0
+    const roundGamesCount = groupGames ? groupGames : 1
+    
 
     group.teams.forEach((t, index) => {
         t.color = colors[index%colors.length]
@@ -13,7 +15,7 @@ export function createGames(group) {
 
     if (teamCount < 2) return []
 
-    const pairings = getTeamParings(teamCount)
+    const pairings = getTeamParings(teamCount, roundGamesCount)
     const games = []
 
     let counter = 0
@@ -30,7 +32,132 @@ export function createGames(group) {
     return games
 }
 
-export function getTeamParings(numberOfTeams) {
+function arrayRemove(arr, value) { 
+    
+    return arr.filter(function(ele){ 
+        return ele != value; 
+    });
+}
+
+function hasAlreadyPlayed(games, value, enemy) { 
+    var hasPlayed = false
+    
+    games.forEach(game => {
+        if (game.first == value)
+        {
+            if (game.second == enemy)
+            {
+                console.log("War schon gegner")
+                hasPlayed = true
+            }
+        }
+        else
+        {
+            if (game.first == enemy)
+            {
+                if(game.second == value)
+                {
+                    console.log("War schon gegner")
+                    hasPlayed = true
+                }
+            }
+        }
+        // console.log("Hat in keinem game gegeneinander gespielt")
+    });
+    return hasPlayed
+}
+
+function getGamesForOneRound(numberOfTeams, games) { 
+    var teamNrs = []
+    for (let i = 0; i < numberOfTeams; i++) {
+        teamNrs.push((i + 1))
+    }
+    while(teamNrs.length > 1) {
+        const game = {}
+        var item = teamNrs[Math.floor(Math.random()*teamNrs.length)];
+        game.first = item
+        teamNrs = arrayRemove(teamNrs, item);
+
+        var item2 = teamNrs[Math.floor(Math.random()*teamNrs.length)];
+
+        const hasAlreadyPlayedCounter = 0
+        while ( hasAlreadyPlayed(games, item, item2))
+        {
+            item2 = teamNrs[Math.floor(Math.random()*teamNrs.length)];
+            hasAlreadyPlayedCounter++
+
+            if(hasAlreadyPlayedCounter > 300)
+            {
+                throw new Error()
+            }
+        }
+        console.log("hasAlreadyPlayed: " + hasAlreadyPlayedCounter)
+        game.second = item2
+        teamNrs = arrayRemove(teamNrs, item2);
+
+        games.push(game)
+    }
+}
+
+function getGamesForOneRoundCollision(numberOfTeams, games) { 
+    var teamNrs = []
+    for (let i = 0; i < numberOfTeams; i++) {
+        teamNrs.push((i + 1))
+    }
+    while(teamNrs.length > 1) {
+        const game = {}
+        var item = teamNrs[Math.floor(Math.random()*teamNrs.length)];
+        game.first = item
+        teamNrs = arrayRemove(teamNrs, item);
+
+        var item2 = teamNrs[Math.floor(Math.random()*teamNrs.length)];
+
+        const hasAlreadyPlayedCounter = 0
+        while ( hasAlreadyPlayed(games, item, item2))
+        {
+            item2 = teamNrs[Math.floor(Math.random()*teamNrs.length)];
+            hasAlreadyPlayedCounter++
+
+            if(hasAlreadyPlayedCounter > 50)
+            {
+                break
+            }
+        }
+        game.second = item2
+        teamNrs = arrayRemove(teamNrs, item2);
+
+        games.push(game)
+    }
+}
+
+export function getTeamParings(numberOfTeams, numberOfRoundGames) {
+    const games = []
+
+    for (let i = 0; i < numberOfRoundGames; i++) {
+        let triesOneGameEachPerRound = 0
+        while (triesOneGameEachPerRound < 3)
+        {
+            try {
+                getGamesForOneRound(numberOfTeams, games)
+                triesOneGameEachPerRound = -1
+                break
+            }
+            catch (err) {
+                triesOneGameEachPerRound++
+                console.log("Error: not possible to create games without duplicate enemies! retry " + (triesOneGameEachPerRound+1))
+            }
+        }
+        if ( triesOneGameEachPerRound !== -1)
+        {
+            console.log("Error: not possible to create games without duplicate enemies! Continuing with duplicates")
+            getGamesForOneRoundCollision(numberOfTeams, games)
+        }
+    }
+
+    return games
+}
+
+export function getTeamParings2(numberOfTeams) {
     switch (numberOfTeams) {
         case 2:
             return [

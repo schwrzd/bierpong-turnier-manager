@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 import Group from "../model/Group";
 import {colors} from "../model/Team";
 
-export function createGroups(teams, groupCount) {
+export function createGroups(teams, groupCount, winnerPerGroup, rankingConfig) {
     if (!teams || teams.length === 0 || groupCount < 1) {
         return []
     }
@@ -11,7 +11,7 @@ export function createGroups(teams, groupCount) {
     const groups = []
 
     for (let g = 0; g < groupCount; g++) {
-        groups.push(new Group(uuid(), "Tisch " + (g + 1),))
+        groups.push(new Group(uuid(), "Tisch " + (g + 1),winnerPerGroup, rankingConfig,))
     }
 
     for (let t = 0; t < teamCount; t++) {

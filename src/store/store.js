@@ -8,11 +8,16 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         layout: {
-            groupsPerRow: 2,
-            isPaginationEnabled: false,
-            gamesPerPage: 6,
-            isColoredTeamsEnabled: true,
-            isCupLayoutEnabled: false
+            groupsPerRow: 1,
+            isPaginationEnabled: true,
+            gamesPerPage: 2,
+            isColoredTeamsEnabled: true
+        },
+        settings: {
+            cups: 10,
+            pointsPerHit: 1,
+            extraPointsForWin: 0,
+            extraPointsForFinishWin: 5
         },
     },
     mutations: {},

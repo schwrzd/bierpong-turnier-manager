@@ -18,8 +18,7 @@
             Regeln I - Turnierablauf
           </h1>
           <ul class="rules mt-6 mb-6 elevation-4 pa-6 pl-10">
-            <li>Ein Spiel dauert maximal <strong>30 Minuten</strong>. Zu Beginn startet einer der 4 Spieler:innen eine
-              Stoppuhr
+            <li>Ein Spiel dauert maximal <strong>15 Minuten</strong>. Wird das Spiel nicht beendet, so gilt der aktuelle Stand als Ergebnis. Zu Beginn jeder Runde starten alle Teams gleichzeitig
             </li>
             <li>Vor Beginn wird festgelegt <strong>welches Team anfängt</strong> (ggf. eine Runde Schere/Stein/Papier. Das
               Gewinnerteam darf entscheiden)
@@ -145,7 +144,7 @@ export default Vue.extend({
 
   methods: {
     cycleNext() {
-      this.currentPage = (this.currentPage + 1) % 4
+      // this.currentPage = (this.currentPage + 1) % 4
     },
     showDialog(message) {
       this.message = message;

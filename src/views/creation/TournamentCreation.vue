@@ -102,17 +102,21 @@
     <v-card
       class="mt-4"
     >
-      <v-card-title> Konfiguriere die Erstellung der Gruppen: </v-card-title>
+      <v-card-title> Konfiguriere die Einstellungen des Turniers: </v-card-title>
       <v-card-text>
         <v-tabs v-model="tab" grow>
-          <v-tab> Teams </v-tab>
-          <v-tab> Spieler*innen </v-tab>
+          <v-tab> Gruppenerstellung </v-tab>
+          <v-tab> Einstellungen </v-tab>
+          <!-- <v-tab> Spieler*innen </v-tab>
           <v-tab> Manuell </v-tab>
-          <v-tab> Ext. Anmeldungen </v-tab>
+          <v-tab> Ext. Anmeldungen </v-tab> -->
 
           <v-tabs-items v-model="tab">
             <v-tab-item>
               <team-creation :tournamentConfig="tournamentConfig" />
+            </v-tab-item>
+            <v-tab-item>
+              <setting-creation :tournamentConfig="tournamentConfig" />
             </v-tab-item>
             <v-tab-item>
               <player-creation :tournamentConfig="tournamentConfig" />
@@ -134,6 +138,7 @@
 
 <script>
 import TeamCreation from "./TeamCreation";
+import SettingCreation from "./SettingCreation";
 import PlayerCreation from "./PlayerCreation";
 import ManualCreation from "./ManualCreation";
 import ExistingRegistrationCreation from "./ExistingRegistrationCreation";
@@ -141,6 +146,7 @@ import ExistingRegistrationCreation from "./ExistingRegistrationCreation";
 export default {
   components: {
     TeamCreation,
+    SettingCreation,
     PlayerCreation,
     ManualCreation,
     ExistingRegistrationCreation,

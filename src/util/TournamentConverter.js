@@ -69,6 +69,37 @@ export function convertJsonToTournament(jTournament) {
     return tournament
 }
 
+export function convertTournamentWinnerToJson(tournament) {
+    if (!tournament) return {}
+
+    const jTeams = []
+    var teams = "Teams absteigend nach ranking geordnet (1. Platz, 2.Platz ..)\n\n"
+    teams += "--------------------------\n"
+    tournament.groups.forEach(group => {
+        teams += "\t" + group.name + ":\n"
+
+        teams += "--------------------------\n"
+
+        const sortedTeams = group.teams
+
+
+        sortedTeams.forEach((team, index) => {
+            if (index %5 === 0)
+            {
+                teams += "\n"
+            }
+                teams += team.name + "\n"
+                // jTeams.push({
+                //     position: index + 1,
+                //     name: team.name,
+                // })
+        })
+        teams += "--------------------------\n"
+    })
+    
+    return teams
+}
+
 export function convertTournamentToJson(tournament) {
     if (!tournament) return {}
 
@@ -112,3 +143,4 @@ export function convertTournamentToJson(tournament) {
         groups: jGroups
     }
 }
+

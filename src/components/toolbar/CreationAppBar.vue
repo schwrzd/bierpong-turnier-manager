@@ -7,7 +7,7 @@
       contain
     />
     <router-link to="/">
-      <v-toolbar-title class="white--text">BierPong-Turnier</v-toolbar-title>
+      <v-toolbar-title class="white--text">Bierpong-Turnier-Manager</v-toolbar-title>
     </router-link>
     <v-spacer/>
     <v-btn
